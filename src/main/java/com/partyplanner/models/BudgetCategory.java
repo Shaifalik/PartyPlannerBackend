@@ -9,14 +9,14 @@ import javax.persistence.Id;
 public class BudgetCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _budgetCategoryId;
+	private long _budgetCategoryId;
 	private String _budgetCategoryName;
 	private int _budgetCategoryAmount;
 	
-	public int get_budgetCategoryId() {
+	public long get_budgetCategoryId() {
 		return _budgetCategoryId;
 	}
-	public void set_budgetCategoryId(int _budgetCategoryId) {
+	public void set_budgetCategoryId(long _budgetCategoryId) {
 		this._budgetCategoryId = _budgetCategoryId;
 	}
 	

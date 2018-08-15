@@ -18,8 +18,7 @@ public class Budget {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _budgetId;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	private BudgetCategory _budgetCategoryId;
+	private int _budgetCategoryId;
 	
 	private int _totalExpense;
 	private int _totalQuantity;
@@ -36,12 +35,12 @@ public class Budget {
 		this._budgetId = _budgetId;
 	}
 
-	public BudgetCategory get_budgetCategoryId() {
+	public int get_budgetCategory() {
 		return _budgetCategoryId;
 	}
 
-	public void set_budgetCategoryId(BudgetCategory _budgetCategoryId) {
-		this._budgetCategoryId = _budgetCategoryId;
+	public void set_budgetCategoryId(int _budgetCategory) {
+		this._budgetCategoryId = _budgetCategory;
 	}
 
 	public int get_totalExpense() {
