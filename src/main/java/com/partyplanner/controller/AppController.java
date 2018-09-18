@@ -1,6 +1,7 @@
 package com.partyplanner.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import com.partyplanner.models.Food;
 import com.partyplanner.models.Guest;
 import com.partyplanner.models.Location;
 import com.partyplanner.services.AppService;
+import com.partyplanner.services.EmailServiceProvider;
 
 @RestController
 @RequestMapping("/rest")
@@ -29,6 +31,9 @@ public class AppController {
 	@Autowired
 	private AppService appService;
 
+	@Autowired
+	private EmailServiceProvider emailService;
+
 	@PostMapping(value = "/createEvent")
 	public String createEvent(@RequestBody String json) {
 		System.out.println(json);
@@ -37,7 +42,7 @@ public class AppController {
 			eventData = new ObjectMapper().readValue(json, EventDetails.class);
 			appService.persist(eventData);
 			return "Saved Successfully";
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "Error Ocurred while Saving";
 		}
@@ -78,21 +83,30 @@ public class AppController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@GetMapping(value = "/events")
 	public List<EventDetails> getAllevents() {
-		 List<EventDetails> evnt = appService.get();
-		return evnt;
-	}
-	
-	@GetMapping(value = "/event/{id}")
-	public Optional<EventDetails> getEventById(@PathVariable int id) {
-		 Optional<EventDetails> evnt = appService.getEventById(id);
+		List<EventDetails> evnt = appService.get();
 		return evnt;
 	}
 
-	@GetMapping(value = "/hello")
+	@GetMapping(value = "/event/{id}")
+	public Optional<EventDetails> getEventById(@PathVariable int id) {
+		Optional<EventDetails> evnt = appService.getEventById(id);
+		return evnt;
+	}
+
+	@RequestMapping(value = "/sendEmail")
+	public String sendEmail(@RequestBody List<Guest> GuestList) {
+		List<String> guestListEmailIds = new ArrayList<String>();
+		for (Guest guest : GuestList) {
+			guestListEmailIds.add(guest.get_guestEmailId());
+		}
+		return emailService.sendMail(guestListEmailIds);
+	}
+
+	@GetMapping(value = "/sendHello")
 	public String hello() {
-		return "hello";
+		return "done";
 	}
 }

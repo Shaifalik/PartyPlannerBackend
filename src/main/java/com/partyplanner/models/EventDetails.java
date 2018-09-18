@@ -13,8 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+        name = "event_details",
+        uniqueConstraints = {
+        		 @UniqueConstraint(columnNames = "_eventName")
+        })
 public class EventDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
