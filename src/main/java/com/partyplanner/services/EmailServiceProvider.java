@@ -20,6 +20,8 @@ public class EmailServiceProvider {
 	public JavaMailSender emailSender;
 
 	public String sendMail(List<String> guestEmailIds) {
+		
+		
 		SimpleMailMessage mail = new SimpleMailMessage();
 		try {
 			mail.setTo(guestEmailIds.get(0));

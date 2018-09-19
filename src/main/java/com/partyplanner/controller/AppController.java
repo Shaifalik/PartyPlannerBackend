@@ -97,9 +97,9 @@ public class AppController {
 	}
 
 	@RequestMapping(value = "/sendEmail")
-	public String sendEmail(@RequestBody List<Guest> GuestList) {
+	public String sendEmail(@RequestBody ArrayList<Guest> guestList) {
 		List<String> guestListEmailIds = new ArrayList<String>();
-		for (Guest guest : GuestList) {
+		for (Guest guest : guestList) {
 			guestListEmailIds.add(guest.get_guestEmailId());
 		}
 		return emailService.sendMail(guestListEmailIds);
