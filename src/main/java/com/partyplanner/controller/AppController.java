@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,9 +55,12 @@ public class AppController {
 			eventData = new ObjectMapper().readValue(json, EventDetails.class);
 			appService.updateEventData(eventData);
 			return "Saved Successfully";
+		}catch(DataIntegrityViolationException ex) {
+			ex.printStackTrace();
+			throw new Exception("EventId should be unique");
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Error Ocurred while Saving");
+			throw new Exception(e);
 		}
 	}
 
