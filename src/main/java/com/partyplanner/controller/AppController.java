@@ -35,8 +35,7 @@ public class AppController {
 	private EmailServiceProvider emailService;
 
 	@PostMapping(value = "/createEvent")
-	public String createEvent(@RequestBody String json) {
-		System.out.println(json);
+	public String createEvent(@RequestBody String json) throws Exception {
 		EventDetails eventData;
 		try {
 			eventData = new ObjectMapper().readValue(json, EventDetails.class);
@@ -44,37 +43,25 @@ public class AppController {
 			return "Saved Successfully";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "Error Ocurred while Saving";
+			throw new Exception("Error Ocurred while Saving");
 		}
 	}
-
-	@GetMapping(value = "/fetchBudgetCategory")
-	public List<BudgetCategory> fetchBudgetCategory() {
-		System.out.println("done");
-		return appService.fetchCategoryData();
-	}
-
-	@GetMapping(value = "/fetchLocationList")
-	public List<Location> fetchLocationList() {
-		System.out.println("LocationData");
-		return appService.fetchLocationData();
-	}
-
-	@GetMapping(value = "/fetchFoodList")
-	public List<Food> fetchFoodList() {
-		System.out.println("FoodData");
-		return appService.fetchFoodData();
-	}
-
-	@GetMapping(value = "/fetchGuestList")
-	public List<Guest> fetchGuestList() {
-		System.out.println("GuestData");
-		return appService.fetchGuestData();
+	
+	@PostMapping(value = "/updateEventDetailData")
+	public String updateEventDetailData(@RequestBody String json) throws Exception {
+		EventDetails eventData;
+		try {
+			eventData = new ObjectMapper().readValue(json, EventDetails.class);
+			appService.updateEventData(eventData);
+			return "Saved Successfully";
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Error Ocurred while Saving");
+		}
 	}
 
 	@PostMapping(value = "/updateBudgetCategoryData")
 	public void updateBudgetCategoryData(@RequestBody String jsonData) {
-		System.out.println("updating");
 		BudgetCategory ctgy;
 		try {
 			ctgy = new ObjectMapper().readValue(jsonData, BudgetCategory.class);
@@ -82,6 +69,40 @@ public class AppController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@RequestMapping(value = "/sendEmail")
+	public String sendEmail(@RequestBody ArrayList<Guest> guestList) {
+		List<String> guestListEmailIds = new ArrayList<String>();
+		for (Guest guest : guestList) {
+			guestListEmailIds.add(guest.get_guestEmailId());
+		}
+		return emailService.sendMail(guestListEmailIds);
+	}
+
+	@GetMapping(value = "/fetchLocationList")
+	public List<Location> fetchLocationList() {
+		return appService.fetchLocationData();
+	}
+
+	@GetMapping(value = "/fetchFoodList")
+	public List<Food> fetchFoodList() {
+		return appService.fetchFoodData();
+	}
+
+	@GetMapping(value = "/fetchGuestList")
+	public List<Guest> fetchGuestList() {
+		return appService.fetchGuestData();
+	}
+	
+	@GetMapping(value = "/fetchBudgetCategory")
+	public List<BudgetCategory> fetchBudgetCategory() {
+		return appService.fetchCategoryData();
+	}
+
+	@GetMapping(value = "/fetchBudgetCategoryIdData/{budCtgy}")
+	public BudgetCategory fetchBudgetCategoryData(@PathVariable int budCtgy) {
+		return appService.fetchBudgetCategoryIdData(budCtgy);
 	}
 
 	@GetMapping(value = "/events")
@@ -96,17 +117,4 @@ public class AppController {
 		return evnt;
 	}
 
-	@RequestMapping(value = "/sendEmail")
-	public String sendEmail(@RequestBody ArrayList<Guest> guestList) {
-		List<String> guestListEmailIds = new ArrayList<String>();
-		for (Guest guest : guestList) {
-			guestListEmailIds.add(guest.get_guestEmailId());
-		}
-		return emailService.sendMail(guestListEmailIds);
-	}
-
-	@GetMapping(value = "/sendHello")
-	public String hello() {
-		return "done";
-	}
 }

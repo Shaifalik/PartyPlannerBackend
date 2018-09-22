@@ -35,7 +35,7 @@ public class Budget {
 		this._budgetId = _budgetId;
 	}
 
-	public int get_budgetCategory() {
+	public int get_budgetCategoryId() {
 		return _budgetCategoryId;
 	}
 

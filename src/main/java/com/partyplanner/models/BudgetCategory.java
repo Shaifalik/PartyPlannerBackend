@@ -5,18 +5,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BudgetCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long _budgetCategoryId;
+	private int _budgetCategoryId;
 	private String _budgetCategoryName;
 	private int _budgetCategoryAmount;
 	
-	public long get_budgetCategoryId() {
+	public int get_budgetCategoryId() {
 		return _budgetCategoryId;
 	}
-	public void set_budgetCategoryId(long _budgetCategoryId) {
+	public void set_budgetCategoryId(int _budgetCategoryId) {
 		this._budgetCategoryId = _budgetCategoryId;
 	}
 	
