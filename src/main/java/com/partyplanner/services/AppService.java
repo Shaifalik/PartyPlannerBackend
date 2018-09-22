@@ -15,6 +15,7 @@ import com.partyplanner.models.Location;
 import com.partyplanner.repos.FoodRepository;
 import com.partyplanner.repos.GuestRepository;
 import com.partyplanner.repos.LocationRepository;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class AppService {
@@ -52,8 +53,11 @@ public class AppService {
 	}
 
 	public List<EventDetails> get() {
-		List<EventDetails> evntDetail = appRepo.findAll();
+		List<EventDetails> evntDetail = appRepo.findAll(sortByIdDesc());
 		return evntDetail;
+	}
+	private Sort sortByIdDesc() {
+		return new Sort(Sort.Direction.DESC, "_eventId");
 	}
 
 	public Optional<EventDetails> getEventById(int id) {
