@@ -2,8 +2,10 @@ package com.partyplanner.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -47,7 +49,7 @@ public class AppController {
 			throw new Exception("Error Ocurred while Saving");
 		}
 	}
-	
+
 	@PostMapping(value = "/updateEventDetailData")
 	public String updateEventDetailData(@RequestBody String json) throws Exception {
 		EventDetails eventData;
@@ -55,7 +57,7 @@ public class AppController {
 			eventData = new ObjectMapper().readValue(json, EventDetails.class);
 			appService.updateEventData(eventData);
 			return "Saved Successfully";
-		}catch(DataIntegrityViolationException ex) {
+		} catch (DataIntegrityViolationException ex) {
 			ex.printStackTrace();
 			throw new Exception("EventId should be unique");
 		} catch (Exception e) {
@@ -75,30 +77,42 @@ public class AppController {
 		}
 	}
 
-	@RequestMapping(value = "/sendEmail")
-	public String sendEmail(@RequestBody ArrayList<Guest> guestList) {
+	@RequestMapping(value = "/sendEmail/{eventId}")
+	public String sendEmail(@RequestBody ArrayList<Guest> guestList, @PathVariable int eventId) {
 		List<String> guestListEmailIds = new ArrayList<String>();
 		for (Guest guest : guestList) {
 			guestListEmailIds.add(guest.get_guestEmailId());
 		}
-		return emailService.sendMail(guestListEmailIds);
+		return emailService.sendMail(guestListEmailIds, eventId);
 	}
 
 	@GetMapping(value = "/fetchLocationList")
-	public List<Location> fetchLocationList() {
-		return appService.fetchLocationData();
+	public Set<String> fetchLocationList() {
+		Set<String> locNames = new HashSet<String>();
+		for (Location loc : appService.fetchLocationData()) {
+			locNames.add(loc.get_eventLocation());
+		}
+		return locNames;
 	}
 
 	@GetMapping(value = "/fetchFoodList")
-	public List<Food> fetchFoodList() {
-		return appService.fetchFoodData();
+	public Set<String> fetchFoodList() {
+		Set<String> foodItems = new HashSet<String>();
+		for (Food food : appService.fetchFoodData()) {
+			foodItems.add(food.get_foodItem());
+		}
+		return foodItems;
 	}
 
 	@GetMapping(value = "/fetchGuestList")
-	public List<Guest> fetchGuestList() {
-		return appService.fetchGuestData();
+	public Set<String> fetchGuestList() {
+		Set<String> guestEmailIds = new HashSet<String>();
+		for (Guest guest : appService.fetchGuestData()) {
+			guestEmailIds.add(guest.get_guestEmailId());
+		}
+		return guestEmailIds;
 	}
-	
+
 	@GetMapping(value = "/fetchBudgetCategory")
 	public List<BudgetCategory> fetchBudgetCategory() {
 		return appService.fetchCategoryData();
